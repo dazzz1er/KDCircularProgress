@@ -91,6 +91,12 @@ public class KDCircularProgress: UIView {
         }
     }
     
+    @IBInspectable public var useCircularEnd: Bool = false {
+        didSet {
+            progressLayer.useCircularEnd = useCircularEnd
+        }
+    }
+    
     @IBInspectable public var gradientRotateSpeed: CGFloat = 0 {
         didSet {
             progressLayer.gradientRotateSpeed = gradientRotateSpeed
@@ -204,6 +210,7 @@ public class KDCircularProgress: UIView {
         progressLayer.startAngle = UtilityFunctions.Mod(startAngle, range: 360, minMax: (0,360))
         progressLayer.clockwise = clockwise
         progressLayer.roundedCorners = roundedCorners
+        progressLayer.useCircularEnd = useCircularEnd
         progressLayer.gradientRotateSpeed = gradientRotateSpeed
         progressLayer.glowAmount = UtilityFunctions.Clamp(glowAmount, minMax: (0, 1))
         progressLayer.glowMode = glowMode
@@ -319,6 +326,7 @@ public class KDCircularProgress: UIView {
             }
         }
         var roundedCorners: Bool!
+        var useCircularEnd: Bool!
         var gradientRotateSpeed: CGFloat! {
             didSet {
                 invalidateGradientCache()
@@ -366,6 +374,7 @@ public class KDCircularProgress: UIView {
             startAngle = progressLayer.startAngle
             clockwise = progressLayer.clockwise
             roundedCorners = progressLayer.roundedCorners
+            useCircularEnd = progressLayer.useCircularEnd
             gradientRotateSpeed = progressLayer.gradientRotateSpeed
             glowAmount = progressLayer.glowAmount
             glowMode = progressLayer.glowMode
@@ -413,6 +422,20 @@ public class KDCircularProgress: UIView {
             CGContextSetLineCap(imageCtx, roundedCorners == true ? .Round : .Butt)
             CGContextSetLineWidth(imageCtx, progressLineWidth)
             CGContextDrawPath(imageCtx, .Stroke)
+            
+            if useCircularEnd {
+                let newContext = UIGraphicsGetCurrentContext()
+                let x = arcRadius*cos(toAngle) + CGFloat(size.width/2.0)
+                let y = arcRadius*sin(toAngle) + CGFloat(size.height/2.0)
+                let point = CGPointMake(x, y)
+                CGContextSaveGState(newContext)
+                
+                let shadowColor: CGColorRef = UIColor.blackColor().CGColor
+                CGContextSetLineWidth(newContext,5);
+                CGContextAddArc(newContext,point.x,point.y,15,0.0,CGFloat(M_PI * 2),1);
+                CGContextSetShadowWithColor(newContext, CGSizeMake(-3, -3), 2.0, shadowColor)
+                CGContextDrawPath(newContext, .Fill)
+            }
             
             let drawMask: CGImageRef = CGBitmapContextCreateImage(UIGraphicsGetCurrentContext())!
             UIGraphicsEndImageContext()
