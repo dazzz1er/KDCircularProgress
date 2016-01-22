@@ -433,7 +433,7 @@ public class KDCircularProgress: UIView {
                 let shadowColor: CGColorRef = UIColor.blackColor().CGColor
                 CGContextSetLineWidth(newContext,5);
                 CGContextAddArc(newContext,point.x,point.y,15,0.0,CGFloat(M_PI * 2),1);
-                CGContextSetShadowWithColor(newContext, CGSizeMake(-3, -3), 2.0, shadowColor)
+                CGContextSetShadowWithColor(newContext, CGSizeMake(-2, -2), 2.0, shadowColor)
                 CGContextDrawPath(newContext, .Fill)
             }
             
