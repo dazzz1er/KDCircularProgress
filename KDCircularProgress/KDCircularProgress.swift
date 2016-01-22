@@ -423,7 +423,7 @@ public class KDCircularProgress: UIView {
             CGContextSetLineWidth(imageCtx, progressLineWidth)
             CGContextDrawPath(imageCtx, .Stroke)
             
-            if useCircularEnd {
+            if useCircularEnd == true && angle > 0 {
                 let newContext = UIGraphicsGetCurrentContext()
                 let x = arcRadius*cos(toAngle) + CGFloat(size.width/2.0)
                 let y = arcRadius*sin(toAngle) + CGFloat(size.height/2.0)
